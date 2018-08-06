@@ -559,6 +559,11 @@ SOCIAL ICON
     position: relative;
 }
 
+.responsive{
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}
 
 /*download-button*/
 .download-button a {
