@@ -1,8 +1,11 @@
-sudo: required
 
-language: javascript
 
-services:
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_98574d1028ab_key -iv $encrypted_98574d1028ab_iv -in tajanep-aws.pem.enc -out tajanep-aws.pem -d
+- openssl aes-256-cbc -K $encrypted_98574d1028ab_key -iv $encrypted_98574d1028ab_iv -in tajanep-aws.pem.enc -out tajanep-aws.pem
+
+deploy:
+  provider: script
+  script: bash scripts/deploy.sh
+  on:
+    branch: objective-section-modification
