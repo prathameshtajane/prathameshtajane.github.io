@@ -14,10 +14,6 @@ node {
            DOCKER_IMAGE_VERSION = "${BUILD_NUMBER}-${GIT_COMMIT}"
        }
 
-       stage("mvn build") {
-           sh "mvn clean install"
-       }
-
        stage("docker build") {
            sh "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_VERSION} ."
        }
@@ -36,7 +32,7 @@ node {
                      docker service create \
                        --replicas 1 \
                        --name ${DOCKER_SERVICE_ID} \
-                       --publish 8080:80 \
+                       --publish 8081:80 \
                        ${DOCKERHUB_REPO}:${DOCKER_IMAGE_VERSION}
                    else
                      docker service update \
