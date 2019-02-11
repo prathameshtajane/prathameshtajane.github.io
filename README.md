@@ -1,2 +1,3 @@
-# prathameshtajane.github.io
-Personal resume portal
+# Personal resume portal
+prathameshtajane.github.io
+
