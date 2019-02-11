@@ -53,6 +53,6 @@ node {
 
        stage("cleanup"){
             sh "docker container prune -f"
-            sh "docker rmi ${DOCKERHUB_REPO}:${DOCKER_IMAGE_VERSION}"
+            sh "docker image prune -af"
        }
 }
