@@ -68,6 +68,7 @@ node {
             sh """
                 aws sns publish \
                 --phone-number ${NOTIFICATION_CONTACT} \
+                --region us-east-1 \
                 --message "Deployment SUCESS : ${DOCKER_SERVICE_ID} commit ${COMMIT_ID}"
             """
         }
