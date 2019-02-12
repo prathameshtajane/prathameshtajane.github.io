@@ -2,6 +2,8 @@ node {
     def DOCKERHUB_REPO = "ptajane/pt-personal-website"
     def DOCKER_SERVICE_ID = "pt-personal-website-service"
     def DOCKER_IMAGE_VERSION = ""
+    def NOTIFICATION_CONTACT = "18572695723"
+    def COMMIT_ID=""
 
        stage("clean workspace") {
                deleteDir()
@@ -12,6 +14,7 @@ node {
 
            def GIT_COMMIT = sh(returnStdout: true, script: "git rev-parse HEAD").trim().take(7)
            DOCKER_IMAGE_VERSION = "${BUILD_NUMBER}-${GIT_COMMIT}"
+           COMMIT_ID=${GIT_COMMIT}
        }
 
        stage("docker build") {
@@ -44,6 +47,11 @@ node {
            catch (e) {
                sh "docker service update --rollback ${DOCKER_SERVICE_ID}"
                error "Service update failed. Rolling back ${DOCKER_SERVICE_ID}"
+               sh """
+                    aws sns publish \
+                    --phone-number ${NOTIFICATION_CONTACT} \
+                    --message "Deployment FAILED : ${DOCKER_SERVICE_ID} commit ${COMMIT_ID}"
+                  """
            }
            finally {
                sh "docker container prune -f"
@@ -55,4 +63,12 @@ node {
             sh "docker container prune -f"
             sh "docker image prune -af"
        }
+
+        stage("success notification"){
+            sh """
+                aws sns publish \
+                --phone-number ${NOTIFICATION_CONTACT} \
+                --message "Deployment SUCESS : ${DOCKER_SERVICE_ID} commit ${COMMIT_ID}"
+            """
+        }
 }
